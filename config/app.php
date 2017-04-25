@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://laravel.wecut.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -167,6 +167,8 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
+		TCG\Voyager\VoyagerServiceProvider::class,
+		Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...
