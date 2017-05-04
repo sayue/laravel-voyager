@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTranslationsTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateTranslationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('translations', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'translations', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('table_name');
@@ -36,6 +43,6 @@ class CreateTranslationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('translations');
+        Schema::dropIfExists($this->tablePrefix.'translations');
     }
 }

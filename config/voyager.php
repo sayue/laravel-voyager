@@ -81,7 +81,9 @@ return [
     'database' => [
         'tables' => [
             'hidden' => ['migrations', 'data_rows', 'data_types', 'menu_items', 'password_resets', 'permission_role', 'permissions', 'settings'],
+            'exist'  => ['categories', 'data_rows', 'data_types', 'menus', 'menu_items', 'pages', 'permissions', 'permission_groups', 'permission_role', 'posts', 'roles', 'settings', 'translations', 'users'],
         ],
+        'prefix' => 'vy_',
     ],
 
     /*

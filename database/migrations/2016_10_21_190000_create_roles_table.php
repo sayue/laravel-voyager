@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateRolesTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('display_name');
@@ -28,6 +35,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('roles');
+        Schema::drop($this->tablePrefix.'roles');
     }
 }

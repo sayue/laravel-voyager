@@ -8,6 +8,8 @@ class Permission extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'vy_permissions';
+
     public function roles()
     {
         return $this->hasMany(Role::class);

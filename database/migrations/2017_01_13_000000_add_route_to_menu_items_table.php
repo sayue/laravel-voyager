@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class AddRouteToMenuItemsTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class AddRouteToMenuItemsTable extends Migration
      */
     public function up()
     {
-        Schema::table('menu_items', function (Blueprint $table) {
+        Schema::table($this->tablePrefix.'menu_items', function (Blueprint $table) {
             $table->string('route')->nullable()->default(null);
             $table->text('parameters')->nullable()->default(null);
         });
@@ -26,7 +33,7 @@ class AddRouteToMenuItemsTable extends Migration
      */
     public function down()
     {
-        Schema::table('menu_items', function (Blueprint $table) {
+        Schema::table($this->tablePrefix.'menu_items', function (Blueprint $table) {
             $table->dropColumn('route');
             $table->dropColumn('parameters');
         });

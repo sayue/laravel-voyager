@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePermissionGroupsTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreatePermissionGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('permission_groups', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'permission_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
         });
@@ -26,6 +33,6 @@ class CreatePermissionGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permission_groups');
+        Schema::dropIfExists($this->tablePrefix.'permission_groups');
     }
 }

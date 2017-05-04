@@ -12,7 +12,7 @@ class Category extends Model
 
     protected $translatable = ['name'];
 
-    protected $table = 'categories';
+    protected $table = 'vy_categories';
 
     protected $fillable = ['slug', 'name'];
 

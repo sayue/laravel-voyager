@@ -12,6 +12,8 @@ class User extends AuthUser
 
     protected $guarded = [];
 
+    protected $table = 'vy_users';
+
     /**
      * On save make sure to set the default avatar if image is not set.
      */

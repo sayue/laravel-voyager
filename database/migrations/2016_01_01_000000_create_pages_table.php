@@ -6,6 +6,13 @@ use TCG\Voyager\Models\Page;
 
 class CreatePagesTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -14,7 +21,7 @@ class CreatePagesTable extends Migration
     public function up()
     {
         // Create table for storing roles
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'pages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('author_id');
             $table->string('title');
@@ -36,6 +43,6 @@ class CreatePagesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('pages');
+        Schema::drop($this->tablePrefix.'pages');
     }
 }

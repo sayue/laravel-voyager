@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class AddControllerToDataTypesTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class AddControllerToDataTypesTable extends Migration
      */
     public function up()
     {
-        Schema::table('data_types', function (Blueprint $table) {
+        Schema::table($this->tablePrefix.'data_types', function (Blueprint $table) {
             $table->string('controller')->nullable()->after('model_name');
         });
     }
@@ -25,7 +32,7 @@ class AddControllerToDataTypesTable extends Migration
      */
     public function down()
     {
-        Schema::table('data_types', function (Blueprint $table) {
+        Schema::table($this->tablePrefix.'data_types', function (Blueprint $table) {
             $table->dropColumn('controller');
         });
     }

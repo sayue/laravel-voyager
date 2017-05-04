@@ -5,6 +5,13 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreatePostsTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreatePostsTable extends Migration
     public function up()
     {
         // Create table for storing roles
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'posts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('author_id');
             $table->integer('category_id')->nullable();
@@ -40,6 +47,6 @@ class CreatePostsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('posts');
+        Schema::drop($this->tablePrefix.'posts');
     }
 }

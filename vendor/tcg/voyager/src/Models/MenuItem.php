@@ -14,12 +14,12 @@ class MenuItem extends Model
         'link' => 'translatorLink',
     ];
 
-    protected $table = 'menu_items';
+    protected $table = 'vy_menu_items';
 
     protected $guarded = [];
 
     protected $translatable = ['title'];
-
+    
     public function children()
     {
         return $this->hasMany('TCG\Voyager\Models\MenuItem', 'parent_id')

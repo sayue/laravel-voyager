@@ -18,6 +18,8 @@ class Post extends Model
 
     protected $guarded = [];
 
+    protected $table = 'vy_posts';
+
     public function save(array $options = [])
     {
         // If no author has been assigned, assign the current user's id as the author of the post

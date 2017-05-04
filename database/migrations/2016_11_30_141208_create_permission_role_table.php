@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePermissionRoleTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,11 +20,11 @@ class CreatePermissionRoleTable extends Migration
      */
     public function up()
     {
-        Schema::create('permission_role', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'permission_role', function (Blueprint $table) {
             $table->integer('permission_id')->unsigned()->index();
-            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+            $table->foreign('permission_id')->references('id')->on($this->tablePrefix.'permissions')->onDelete('cascade');
             $table->integer('role_id')->unsigned()->index();
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on($this->tablePrefix.'roles')->onDelete('cascade');
             $table->primary(['permission_id', 'role_id']);
         });
     }
@@ -29,6 +36,6 @@ class CreatePermissionRoleTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permission_role');
+        Schema::dropIfExists($this->tablePrefix.'permission_role');
     }
 }

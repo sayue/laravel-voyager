@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class MakeTableNameNullableInPermissionsTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class MakeTableNameNullableInPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('permissions', function (Blueprint $table) {
+        Schema::table($this->tablePrefix.'permissions', function (Blueprint $table) {
             $table->string('table_name')->nullable()->default(null)->change();
         });
     }

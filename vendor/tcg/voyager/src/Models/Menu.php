@@ -11,10 +11,10 @@ use TCG\Voyager\Facades\Voyager;
  */
 class Menu extends Model
 {
-    protected $table = 'menus';
+    protected $table = 'vy_menus';
 
     protected $guarded = [];
-
+    
     public function items()
     {
         return $this->hasMany(Voyager::modelClass('MenuItem'));

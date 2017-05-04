@@ -9,6 +9,10 @@ class Role extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'vy_roles';
+
+    protected $tablePrefix = 'vy_';
+
     public function users()
     {
         return $this->belongsToMany(Voyager::modelClass('User'), 'user_roles');
@@ -16,6 +20,6 @@ class Role extends Model
 
     public function permissions()
     {
-        return $this->belongsToMany(Voyager::modelClass('Permission'));
+        return $this->belongsToMany(Voyager::modelClass('Permission'),$this->tablePrefix.'permission_role');
     }
 }

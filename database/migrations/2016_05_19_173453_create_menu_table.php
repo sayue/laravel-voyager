@@ -5,6 +5,13 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateMenuTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -12,13 +19,13 @@ class CreateMenuTable extends Migration
      */
     public function up()
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'menus', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
             $table->timestamps();
         });
 
-        Schema::create('menu_items', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'menu_items', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('menu_id')->nullable();
             $table->string('title');
@@ -31,8 +38,8 @@ class CreateMenuTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('menu_items', function (Blueprint $table) {
-            $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
+        Schema::table($this->tablePrefix.'menu_items', function (Blueprint $table) {
+            $table->foreign('menu_id')->references('id')->on($this->tablePrefix.'menus')->onDelete('cascade');
         });
     }
 
@@ -43,7 +50,7 @@ class CreateMenuTable extends Migration
      */
     public function down()
     {
-        Schema::drop('menu_items');
-        Schema::drop('menus');
+        Schema::drop($this->tablePrefix.'menu_items');
+        Schema::drop($this->tablePrefix.'menus');
     }
 }

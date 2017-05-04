@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePermissionTable extends Migration
 {
+    protected $tablePrefix = '';
+
+    public function __construct()
+    {
+        $this->tablePrefix = config('voyager.database.prefix');
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +20,7 @@ class CreatePermissionTable extends Migration
      */
     public function up()
     {
-        Schema::create('permissions', function (Blueprint $table) {
+        Schema::create($this->tablePrefix.'permissions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('key')->index();
             $table->string('table_name');
@@ -28,6 +35,6 @@ class CreatePermissionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permissions');
+        Schema::dropIfExists($this->tablePrefix.'permissions');
     }
 }
