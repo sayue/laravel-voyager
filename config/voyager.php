@@ -27,7 +27,7 @@ return [
     */
 
     'controllers' => [
-        'namespace' => 'TCG\\Voyager\\Http\\Controllers',
+        'namespace' => 'App\\Http\\Controllers\\Voyager',
     ],
 
     /*
@@ -42,7 +42,7 @@ return [
     */
 
     'models' => [
-        'namespace' => 'App\\Models',
+        'namespace' => 'App\\Models\\',
     ],
 
     /*
@@ -80,7 +80,7 @@ return [
 
     'database' => [
         'tables' => [
-            'hidden' => ['migrations', 'data_rows', 'data_types', 'menu_items', 'password_resets', 'permission_role', 'permissions', 'settings'],
+            'hidden' => ['migrations', 'vy_data_rows', 'vy_data_types', 'vy_menu_items', 'vy_password_resets', 'vy_permission_role', 'vy_permissions', 'vy_settings'],
         ],
         'prefix' => 'vy_',
     ],
@@ -208,4 +208,11 @@ return [
 
     'show_dev_tips' => true, // Show development tip "How To Use:" in Menu and Settings
 
+    'additional_css' => [
+        // 'css/custom.css',
+    ],
+
+    'additional_js' => [
+        //'js/custom.js',
+    ],
 ];

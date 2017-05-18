@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\Constraint;
 use Intervention\Image\Facades\Image;
 use TCG\Voyager\Traits\AlertsMessages;
+use Validator;
 
 abstract class Controller extends BaseController
 {
@@ -33,35 +34,17 @@ abstract class Controller extends BaseController
 
     public function insertUpdateData($request, $slug, $rows, $data)
     {
-        $rules = [];
-        $messages = [];
         $multi_select = [];
 
         /*
          * Prepare Translations and Transform data
          */
-        $translations = isBreadTranslatable($data)
+        $translations = is_bread_translatable($data)
                         ? $data->prepareTranslations($request)
                         : [];
 
         foreach ($rows as $row) {
             $options = json_decode($row->details);
-
-            if (isset($options->validation)) {
-                if (isset($options->validation->rule)) {
-                    if (!is_array($options->validation->rule)) {
-                        $rules[$row->field] = explode('|', $options->validation->rule);
-                    } else {
-                        $rules[$row->field] = $options->validation->rule;
-                    }
-                }
-
-                if (isset($options->validation->messages)) {
-                    foreach ($options->validation->messages as $key => $msg) {
-                        $messages[$row->field.'.'.$key] = $msg;
-                    }
-                }
-            }
 
             $content = $this->getContentBasedOnType($request, $slug, $row);
 
@@ -95,8 +78,6 @@ abstract class Controller extends BaseController
             }
         }
 
-        $this->validate($request, $rules, $messages);
-
         $data->save();
 
         // Save translations
@@ -109,6 +90,34 @@ abstract class Controller extends BaseController
         }
 
         return $data;
+    }
+
+    public function validateBread($request, $data)
+    {
+        $rules = [];
+        $messages = [];
+
+        foreach ($data as $row) {
+            $options = json_decode($row->details);
+
+            if (isset($options->validation)) {
+                if (isset($options->validation->rule)) {
+                    if (!is_array($options->validation->rule)) {
+                        $rules[$row->field] = explode('|', $options->validation->rule);
+                    } else {
+                        $rules[$row->field] = $options->validation->rule;
+                    }
+                }
+
+                if (isset($options->validation->messages)) {
+                    foreach ($options->validation->messages as $key => $msg) {
+                        $messages[$row->field.'.'.$key] = $msg;
+                    }
+                }
+            }
+        }
+
+        return Validator::make($request, $rules, $messages);
     }
 
     public function getContentBasedOnType(Request $request, $slug, $row)
@@ -165,11 +174,48 @@ abstract class Controller extends BaseController
                         $path = $slug.'/'.date('F').date('Y').'/';
                         array_push($filesPath, $path.$filename.'.'.$file->getClientOriginalExtension());
                         $filePath = $path.$filename.'.'.$file->getClientOriginalExtension();
-                        $request->file($row->field)[$key]->storeAs(
-                            $path,
-                            $filename.'.'.$file->getClientOriginalExtension(),
-                            config('voyager.storage.disk', 'public')
-                        );
+
+                        $image = Image::make($file)->resize($resize_width, $resize_height,
+                            function (Constraint $constraint) {
+                                $constraint->aspectRatio();
+                                $constraint->upsize();
+                            })->encode($file->getClientOriginalExtension(), 75);
+
+                        Storage::disk(config('voyager.storage.disk'))->put($filePath, (string) $image, 'public');
+
+                        if (isset($options->thumbnails)) {
+                            foreach ($options->thumbnails as $thumbnails) {
+                                if (isset($thumbnails->name) && isset($thumbnails->scale)) {
+                                    $scale = intval($thumbnails->scale) / 100;
+                                    $thumb_resize_width = $resize_width;
+                                    $thumb_resize_height = $resize_height;
+
+                                    if ($thumb_resize_width != 'null') {
+                                        $thumb_resize_width = $thumb_resize_width * $scale;
+                                    }
+
+                                    if ($thumb_resize_height != 'null') {
+                                        $thumb_resize_height = $thumb_resize_height * $scale;
+                                    }
+
+                                    $image = Image::make($file)->resize($thumb_resize_width, $thumb_resize_height,
+                                        function (Constraint $constraint) {
+                                            $constraint->aspectRatio();
+                                            $constraint->upsize();
+                                        })->encode($file->getClientOriginalExtension(), 75);
+                                } elseif (isset($options->thumbnails) && isset($thumbnails->crop->width) && isset($thumbnails->crop->height)) {
+                                    $crop_width = $thumbnails->crop->width;
+                                    $crop_height = $thumbnails->crop->height;
+                                    $image = Image::make($file)
+                                        ->fit($crop_width, $crop_height)
+                                        ->encode($file->getClientOriginalExtension(), 75);
+                                }
+
+                                Storage::disk(config('voyager.storage.disk'))->put($path.$filename.'-'.$thumbnails->name.'.'.$file->getClientOriginalExtension(),
+                                    (string) $image, 'public'
+                                );
+                            }
+                        }
                     }
 
                     return json_encode($filesPath);
