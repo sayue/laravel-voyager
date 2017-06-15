@@ -3,7 +3,7 @@ laravel php frameword with extension voyager
 
 ### 版本要求  
 Laravel 5.4+  
-Voyager 0.11.9
+Voyager 0.11.10
 
 ### 安装步骤
 1. 拉取项目
@@ -15,11 +15,16 @@ Voyager 0.11.9
 4. 生成Laravel的key
 > php artisan key:generate
 5. 将vendor/tcg/voyager/src/Models 文件下的model文件撤销覆盖修改（支持voyager的表前缀）
-> checkout vendor/tcg/voyager/src/Models/*
+> git checkout vendor/tcg/voyager/src/Models/*
 6. 安装[Voyager](https://the-control-group.github.io)并填充测试数据
 > php artisan voyager:install --with-dummy  
-
+7. 生成Voyager自定义控制器文件夹 在项目根目录执行
+> php artisan voyager:controllers
 ---------------------------------------
+
+### 运行
+项目地址 http://xxx/admin (xxx为Nginx配置的项目域名)
+帐密 admin@admin.com password
 
 ### 注意事项  
 ###### 其中Nginx配置注意这两处配置
